@@ -18,6 +18,7 @@ def parse_arguments():
     # Groups parameters
     parser.add_argument("--M", type=int, default=20,help="_")
     parser.add_argument("--N", type=int, default=2, help="_")
+    parser.add_argument("--Threshold", type=int, default=25, help="_")
     parser.add_argument("--min_images_per_class", type=int, default=10,
                         help="minimum number of images per class. Otherwise class is discarded")
 
@@ -27,8 +28,10 @@ def parse_arguments():
     parser.add_argument("-bs", "--batch_size", type=int, default=64, help="_")
     parser.add_argument("--scheduler_patience", type=int, default=10, help="_")
     parser.add_argument("--epochs_num", type=int, default=500, help="_")
-    parser.add_argument("--train_resize", type=int, default=(224, 224), help="_")
-    parser.add_argument("--test_resize", type=int, default=256, help="_")
+    # parser.add_argument("--train_resize", type=int, default=(224, 224), help="_") # ORIGION
+    parser.add_argument("--train_resize", type=int, default=(210, 280), help="_")   # EDIT
+    # parser.add_argument("--test_resize", type=int, default=256, help="_") # ORIGION
+    parser.add_argument("--test_resize", type=int, default=210, help="_")   # EDIT
     parser.add_argument("--lr", type=float, default=0.0001, help="_")
     parser.add_argument("--classifier_lr", type=float, default=0.01, help="_")
     parser.add_argument("-bb", "--backbone", type=str, default="EfficientNet_B0",

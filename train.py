@@ -84,7 +84,8 @@ else:
     best_valid_acc = start_epoch_num = 0
     best_loss = 100
 
-scaler = torch.cuda.amp.GradScaler()
+# scaler = torch.cuda.amp.GradScaler()  # ORIGION
+scaler = torch.GradScaler('cuda')   # EDIT
 for epoch_num in range(start_epoch_num, args.epochs_num):
     if optimizer.param_groups[0]['lr'] < 1e-6:
         logging.info('LR dropped below 1e-6, stopping training...')
@@ -112,7 +113,8 @@ for epoch_num in range(start_epoch_num, args.epochs_num):
         optimizer.zero_grad()
         classifiers_optimizers[current_group_num].zero_grad()
 
-        with torch.cuda.amp.autocast():
+        # with torch.cuda.amp.autocast():   # ORIGION
+        with torch.autocast('cuda'):        # EDIT
             descriptors = model(images)
             # 1) 'output' is respectively the angular or cosine margin, of the AMCC or LMCC.
             # 2) 'logits' are the logits obtained multiplying the embedding for the

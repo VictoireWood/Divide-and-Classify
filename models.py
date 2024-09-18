@@ -5,6 +5,8 @@ import torchvision
 from torch import nn
 import torch.nn.functional as F
 
+import parser   # NEW
+args = parser.parse_arguments() # NEW
 
 class GeoClassNet(nn.Module):
     def __init__(self, backbone):
@@ -62,7 +64,9 @@ def get_backbone(backbone):
 
 def get_output_channels_dim(model):
     """Return the number of channels in the output of a model."""
-    return model(torch.ones([1, 3, 224, 224])).shape[1]
+    # return model(torch.ones([1, 3, 224, 224])).shape[1]   # ORIGION
+    size = args.train_resize    # NEW
+    return model(torch.ones([1, 3, size[0], size[1]])).shape[1] # EDIT
 
 
 class Flatten(nn.Module):

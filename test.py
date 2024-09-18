@@ -3,9 +3,12 @@ import torch
 from tqdm import tqdm
 
 from classifiers import LinearLayer
+import parser   # NEW
+args = parser.parse_arguments() # NEW
 
 LR_N = [1, 5, 10, 20]
-threshold = 25
+# threshold = 25    # ORIGION
+threshold = args.threshold    # EDIT
 
 def compute_pred(criterion, descriptors):
     if isinstance(criterion, LinearLayer):
@@ -48,7 +51,8 @@ def inference(args, model, classifiers, test_dl, groups, num_test_images):
     torch.cuda.empty_cache()  # Release classifiers memory
     lr_ns = []
     for N in LR_N:
-        lr_ns.append(torch.count_nonzero((valid_distances[:, :N] <= 25).any(axis=1)).item() * 100 / num_test_images)
+        # lr_ns.append(torch.count_nonzero((valid_distances[:, :N] <= 25).any(axis=1)).item() * 100 / num_test_images)  # ORIGION
+        lr_ns.append(torch.count_nonzero((valid_distances[:, :N] <= threshold).any(axis=1)).item() * 100 / num_test_images) # EDIT
 
     gcd_str = ", ".join([f'LR@{N}: {acc:.1f}' for N, acc in zip(LR_N, lr_ns)])
     
