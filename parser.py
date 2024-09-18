@@ -18,7 +18,7 @@ def parse_arguments():
     # Groups parameters
     parser.add_argument("--M", type=int, default=20,help="_")
     parser.add_argument("--N", type=int, default=2, help="_")
-    parser.add_argument("--Threshold", type=int, default=25, help="_")
+    parser.add_argument("--threshold", type=int, default=25, help="_")
     parser.add_argument("--min_images_per_class", type=int, default=10,
                         help="minimum number of images per class. Otherwise class is discarded")
 
@@ -50,7 +50,7 @@ def parse_arguments():
     parser.add_argument("--exp_name", type=str, default="default",
                         help="name of experiment. The logs will be saved in a folder with such name")
     parser.add_argument("--dataset_name", type=str, default="sf_xl",
-                        choices=["sf_xl", "tokyo247", "pitts30k", "pitts250k"], help="_")
+                        choices=["sf_xl", "tokyo247", "pitts30k", "pitts250k", "qingdao_150"], help="_")
     parser.add_argument("--train_set_path", type=str, default=None,
                         help="path to folder of train set")
     parser.add_argument("--val_set_path", type=str, default=None,
