@@ -17,7 +17,7 @@ from classifiers import AAMC, LMCC, LinearLayer
 
 args = parser.parse_arguments()
 assert args.train_set_path is not None, 'you must specify the train set path'
-assert args.val_set_path is not None, 'you must specify the val set path'
+# assert args.val_set_path is not None, 'you must specify the val set path'
 assert args.test_set_path is not None, 'you must specify the test set path'
 
 commons.make_deterministic(args.seed)
@@ -34,14 +34,22 @@ train_augmentation = T.Compose([
         T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
 
-groups = [TrainDataset(args.train_set_path, dataset_name=args.dataset_name, group_num=n, M=args.M, N=args.N,
+groups = []
+for n in range(args.N * args.N):
+    group = TrainDataset(args.train_set_path, dataset_name=args.dataset_name, group_num=n, M=args.M, N=args.N,
                        min_images_per_class=args.min_images_per_class,
                        transform=train_augmentation
-                       ) for n in range(args.N * args.N)]
+                       )
+    groups.append(group)
 
-val_dataset = TestDataset(args.val_set_path, M=args.M, N=args.N, image_size=args.test_resize)
+# groups = [TrainDataset(args.train_set_path, dataset_name=args.dataset_name, group_num=n, M=args.M, N=args.N,
+#                        min_images_per_class=args.min_images_per_class,
+#                        transform=train_augmentation
+#                        ) for n in range(args.N * args.N)]
+
+# val_dataset = TestDataset(args.val_set_path, M=args.M, N=args.N, image_size=args.test_resize)
 test_dataset = TestDataset(args.test_set_path, M=args.M, N=args.N, image_size=args.test_resize)
-val_dl = torch.utils.data.DataLoader(dataset=val_dataset, batch_size=1, shuffle=False, num_workers=2, pin_memory=True)
+# val_dl = torch.utils.data.DataLoader(dataset=val_dataset, batch_size=1, shuffle=False, num_workers=2, pin_memory=True)
 test_dl = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=1, shuffle=False, num_workers=2, pin_memory=True)
 
 #### Model
