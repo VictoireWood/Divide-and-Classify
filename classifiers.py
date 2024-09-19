@@ -42,7 +42,7 @@ class AAMC(nn.Module):
         output *= self.s
         # print(output)
         
-        return output, cosine
+        return output, cosine       # NOTE 详见CosFace论文
 
 
 # Based on https://github.com/MuggleWang/CosFace_pytorch/blob/master/layer.py

@@ -98,11 +98,16 @@ for epoch_num in range(start_epoch_num, args.epochs_num):
     if optimizer.param_groups[0]['lr'] < 1e-6:
         logging.info('LR dropped below 1e-6, stopping training...')
         break
-    train_acc = torchmetrics.Accuracy().to(args.device)
+    # train_acc = torchmetrics.Accuracy().to(args.device)
+    classes_num = 0
+    for g in groups:
+        classes_num += g.get_classes_num()
+    classes_num_list = [g.get_classes_num() for g in groups]
     train_loss = torchmetrics.MeanMetric().to(args.device)
 
     # Select classifier and dataloader according to epoch
     current_group_num = epoch_num % len(classifiers)
+    train_acc = torchmetrics.Accuracy(task='multiclass', num_classes=classes_num_list[current_group_num]).to(args.device)
     classifiers[current_group_num] = classifiers[current_group_num].to(args.device)
     util.move_to_device(classifiers_optimizers[current_group_num], args.device)
 
@@ -115,7 +120,7 @@ for epoch_num in range(start_epoch_num, args.epochs_num):
 
     tqdm_bar = tqdm(range(args.iterations_per_epoch), ncols=100, desc="")
     for iteration in tqdm_bar:
-        images, labels, _ = next(dataloader_iterator)
+        images, labels, _ = next(dataloader_iterator)   # tensor_image, class_num, class_center
         images, labels = images.to(args.device), labels.to(args.device)
 
         optimizer.zero_grad()
@@ -127,7 +132,7 @@ for epoch_num in range(start_epoch_num, args.epochs_num):
             # 1) 'output' is respectively the angular or cosine margin, of the AMCC or LMCC.
             # 2) 'logits' are the logits obtained multiplying the embedding for the
             # AMCC/LMCC weights. They are used to compute tha accuracy on the train batches 
-            output, logits = classifiers[current_group_num](descriptors, labels)
+            output, logits = classifiers[current_group_num](descriptors, labels)    # return output, cosine, output相当于激活前的分布，cosine相当于计算ArcFace？
             loss = cross_entropy_loss(output, labels)
 
         scaler.scale(loss).backward()
@@ -176,3 +181,4 @@ for epoch_num in range(start_epoch_num, args.epochs_num):
 
 test_lr_str = test.inference(args, model, classifiers, test_dl, groups, len(test_dataset))
 logging.info(f"Test LR: {test_lr_str}")
+

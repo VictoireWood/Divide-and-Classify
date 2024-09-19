@@ -8,7 +8,7 @@
             "name": "Python 调试参数",
             "type": "debugpy",
             "request": "launch",
-            "program": "/root/workspace/crikff47v38s73fnfgdg/backup/Divide-and-Classify/train.py",
+            "program": "/root/workspace/Divide-and-Classify/train.py",
             "console": "integratedTerminal",
             "args": [
                 "-ct","AAMC",
@@ -16,14 +16,13 @@
                 "--N","2",
                 "--threshold","300",
                 "--min_images_per_class","10",
-                "--epochs_num","32",
+                "-bs","32",
                 "-bb","EfficientNet_B0",
                 "--num_worker","16",
-                "--exp_name","EN_B0_150_100-200",
+                "--exp_name","EN_B0_avgpool_150_100-200",
                 "--train_set_path","/root/shared-storage/shaoxingyu/workspace_backup/dcqd150_train",
-                "--test_set_path","/root/workspace/crikff47v38s73fnfgdg/backup/fake_test",
+                "--test_set_path","/root/shared-storage/shaoxingyu/fake_test",
                 "--dataset_name","qingdao_150",
-
 
             ]
         }
